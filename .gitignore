@@ -1,0 +1,19 @@
+node_modules/
+.DS_Store
+# 采集容器的运行时产物（数据/钥匙/日志），不进仓库
+report.json
+report.html
+web.key
+state.json
+today.json
+tasks.json
+valve.json
+valve-state.json
+usage-daily.json
+history.json
+data/
+__pycache__/
+*.pyc
+*.bak-*
+# 真实账号名→别名的映射表（本地保留，别提交）
+tools/aliases.json

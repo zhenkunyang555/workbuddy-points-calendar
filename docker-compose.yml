@@ -1,0 +1,23 @@
+# WorkBuddy 积分报告 · 采集容器
+#
+#   cp .env.example .env        # 填 MAGPIE_WEB_KEY 和 magpie 配置目录的真实路径
+#   docker compose up -d --build
+#   open http://<nas>:3431/report.html
+#
+# 更新代码：docker compose up -d --build（入口会把新代码覆盖进 /app，状态 json 保留）
+services:
+  collector:
+    build: .
+    image: workbuddy-points-calendar:latest
+    container_name: workbuddy-points-calendar
+    restart: unless-stopped
+    ports:
+      - "3431:8080"
+    environment:
+      TZ: Asia/Shanghai
+      MAGPIE_WEB_KEY: ${MAGPIE_WEB_KEY:?在 .env 里填 magpie 的网页钥匙（MAGPIE_WEB_KEY）}
+    volumes:
+      # 状态与产物：report.json / report.html / today.json / state.json / web.key
+      - ./data:/app
+      # magpie 自己的配置（账号令牌在 plugin-auth.json 里），只读挂载
+      - ${MAGPIE_CFG:-/vol1/docker/magpie/config}:/cfg:ro

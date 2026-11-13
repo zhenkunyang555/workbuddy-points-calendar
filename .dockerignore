@@ -1,0 +1,12 @@
+.git
+data/
+*.bak-*
+__pycache__/
+*.pyc
+report.json
+report.html
+index.html
+calendar.html
+data.json
+README.md
+LICENSE

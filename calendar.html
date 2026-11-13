@@ -1,0 +1,60 @@
+<!doctype html><html lang="zh" charset="utf-8"><meta charset="utf-8">
+<style>
+ body{font-family:inherit;color:var(--foreground);margin:0;padding:2px 0 6px;font-size:13px}
+ .h{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+ .h b{font-size:15px}
+ .k{color:var(--muted-foreground);font-size:12px}
+ .chart{display:flex;align-items:flex-end;gap:3px;height:190px;border-bottom:1px solid var(--border);padding-top:26px;position:relative}
+ .col{flex:1;display:flex;flex-direction:column-reverse;height:100%;position:relative}
+ .seg{width:100%}
+ .lbl{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted-foreground);white-space:nowrap}
+ .val{position:absolute;font-size:10px;font-weight:600;white-space:nowrap;left:50%;transform:translateX(-50%)}
+ .axis{position:absolute;left:0;right:0;border-top:1px dashed var(--border);font-size:9.5px;color:var(--muted-foreground)}
+ .legend{display:flex;gap:14px;margin-top:26px;font-size:11.5px;flex-wrap:wrap;color:var(--muted-foreground)}
+ .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:1px}
+ .note{margin-top:10px;font-size:11.5px;color:var(--muted-foreground);line-height:1.55}
+ .big{color:#e0613a;font-weight:700}
+</style>
+<style>
+ /* 独立页面（GitHub Pages）用：补齐原本由预览面板注入的主题变量 */
+ :root{--foreground:#18181b;--muted-foreground:#6b7280;--border:#e5e7eb;--accent:#4f8ef7;--card:#ffffff;color-scheme:light}
+ html{background:#fff}
+ body{max-width:820px;margin:0 auto;padding:28px 22px 48px;font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.5}
+ @media (prefers-color-scheme:dark){
+  :root{--foreground:#e8e8ea;--muted-foreground:#9aa0a6;--border:#33363b;--card:#16181c;color-scheme:dark}
+  html{background:#0f1115}
+ }
+</style>
+<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:baseline;font-size:12.5px;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--border)"><b>柱状图版（本页）</b><span style="color:var(--muted-foreground)">·</span><a href="index.html" style="color:#4f8ef7;text-decoration:none">完整报告</a><a href="https://github.com/zhenkunyang555/workbuddy-points-calendar" style="color:#4f8ef7;text-decoration:none">源码</a></div>
+<div class="h"><b>每天到期的积分（4 个号合计）</b><span class="k">数据：采集端 report.json · 生成 2026-11-13 17:18:37</span></div>
+<div class="chart" id="c"></div>
+<div class="legend" id="lg"></div>
+<div class="note">图上是 2026-11-13 起 45 天；11/30 开始有到期，<span class="big">12/8 一天掉 2,128 分</span>，最后一根柱子是 12/13。<br>2027-04-14 之后的到期批次不在图上，见首页「到期日程」。</div>
+<script>
+const rows=[{"d": "2026-11-13", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-14", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-15", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-16", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-17", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-18", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-19", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-20", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-21", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-22", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-23", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-24", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-25", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-26", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-27", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-28", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-29", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-11-30", "tot": 779.82, "账号 1": 494.48, "账号 2": 160.67, "账号 3": 124.67, "账号 4": 0.0}, {"d": "2026-12-01", "tot": 421.0, "账号 1": 105.0, "账号 2": 110.0, "账号 3": 106.0, "账号 4": 100.0}, {"d": "2026-12-02", "tot": 428.0, "账号 1": 109.0, "账号 2": 109.0, "账号 3": 110.0, "账号 4": 100.0}, {"d": "2026-12-03", "tot": 423.0, "账号 1": 105.0, "账号 2": 109.0, "账号 3": 109.0, "账号 4": 100.0}, {"d": "2026-12-04", "tot": 423.0, "账号 1": 108.0, "账号 2": 107.0, "账号 3": 108.0, "账号 4": 100.0}, {"d": "2026-12-05", "tot": 420.0, "账号 1": 109.0, "账号 2": 105.0, "账号 3": 106.0, "账号 4": 100.0}, {"d": "2026-12-06", "tot": 423.0, "账号 1": 108.0, "账号 2": 109.0, "账号 3": 106.0, "账号 4": 100.0}, {"d": "2026-12-07", "tot": 424.0, "账号 1": 109.0, "账号 2": 108.0, "账号 3": 107.0, "账号 4": 100.0}, {"d": "2026-12-08", "tot": 2128.0, "账号 1": 106.0, "账号 2": 107.0, "账号 3": 107.0, "账号 4": 1808.0}, {"d": "2026-12-09", "tot": 429.0, "账号 1": 105.0, "账号 2": 107.0, "账号 3": 108.0, "账号 4": 109.0}, {"d": "2026-12-10", "tot": 434.0, "账号 1": 110.0, "账号 2": 108.0, "账号 3": 106.0, "账号 4": 110.0}, {"d": "2026-12-11", "tot": 426.0, "账号 1": 107.0, "账号 2": 105.0, "账号 3": 105.0, "账号 4": 109.0}, {"d": "2026-12-12", "tot": 433.0, "账号 1": 108.0, "账号 2": 107.0, "账号 3": 109.0, "账号 4": 109.0}, {"d": "2026-12-13", "tot": 433.0, "账号 1": 105.0, "账号 2": 109.0, "账号 3": 109.0, "账号 4": 110.0}, {"d": "2026-12-14", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-15", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-16", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-17", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-18", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-19", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-20", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-21", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-22", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-23", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-24", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-25", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-26", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}, {"d": "2026-12-27", "tot": 0.0, "账号 1": 0.0, "账号 2": 0.0, "账号 3": 0.0, "账号 4": 0.0}];
+const users=["账号 1", "账号 2", "账号 3", "账号 4"];
+const col={"账号 1":"#8b8f98","账号 2":"#4f8ef7","账号 3":"#2fb37a","账号 4":"#e0613a"};
+const max=Math.max(...rows.map(r=>r.tot));
+const c=document.getElementById('c');
+// gridlines
+[1000,2000,3000].forEach(v=>{const a=document.createElement('div');a.className='axis';a.style.bottom=(v/max*100)+'%';a.textContent=v+' 分';c.appendChild(a);});
+rows.forEach(r=>{
+  const col_=document.createElement('div');col_.className='col';
+  let acc=0;
+  users.forEach(u=>{const v=r[u];if(v<=0)return;const s=document.createElement('div');s.className='seg';
+    s.style.height=(v/max*100)+'%';s.style.background=col[u];s.title=r.d.slice(5)+' '+u+' '+v;
+    if(r.tot>1000){s.style.outline='1px solid rgba(0,0,0,.08)'}col_.appendChild(s);});
+  if(r.tot>0){const v=document.createElement('div');v.className='val';v.style.bottom=(r.tot/max*100)+'%';
+     v.style.marginBottom='2px';v.textContent=Math.round(r.tot);col_.appendChild(v);}
+  const l=document.createElement('div');l.className='lbl';
+  if(r.d==='2026-11-01')l.textContent='11/1';
+  else if(r.d==='2026-11-25')l.textContent='11/25';
+  else if(r.d==='2026-11-26')l.textContent='26';
+  else if(r.d==='2026-12-01')l.textContent='12/1';
+  else if(r.tot>0)l.textContent=r.d.slice(8);
+  col_.appendChild(l);
+  c.appendChild(col_);
+});
+const lg=document.getElementById('lg');
+users.forEach(u=>{const s=document.createElement('span');s.innerHTML='<i class="sw" style="background:'+col[u]+'"></i>'+u;lg.appendChild(s);});
+</script></html>
